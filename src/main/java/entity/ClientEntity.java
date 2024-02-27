@@ -22,6 +22,16 @@ public class ClientEntity {
         this.balance = balance;
         this.dateOfBirth = dateOfBirth;
     }
+    public ClientEntity(String username, String password, String email,
+                        String telephoneNumber, BigDecimal balance,
+                        LocalDateTime dateOfBirth) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.telephoneNumber = telephoneNumber;
+        this.balance = balance;
+        this.dateOfBirth = dateOfBirth;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

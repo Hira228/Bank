@@ -1,17 +1,18 @@
-package service;
+package services;
 
 import entity.TransactionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repositories.TransactionRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class TransactionServiceImpl implements service.Service<TransactionEntity, UUID>{
+public class TransactionServiceImpl implements services.Service<TransactionEntity, UUID> {
     private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
     private final TransactionRepository transactionRepository;
 

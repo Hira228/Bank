@@ -1,17 +1,17 @@
-package service;
+package services;
 
 import entity.BankAccountEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repositories.BankAccountRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BankAccountServiceImpl implements service.Service<BankAccountEntity, Long> {
+public class BankAccountServiceImpl implements services.Service<BankAccountEntity, Long> {
     private static final Logger logger = LogManager.getLogger(BankAccountServiceImpl.class);
     private final BankAccountRepository bankAccountRepository;
 

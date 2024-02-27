@@ -17,17 +17,17 @@ public class BankAccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final Long id;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private ClientEntity client;
+    private final ClientEntity client;
 
     @Column(name = "balance")
-    private BigDecimal balance;
+    private final BigDecimal balance;
 
     @Column(name = "creation_date")
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
 
     public Long getId() {
         return id;
