@@ -9,23 +9,32 @@ import java.util.UUID;
 @Entity
 @Table(name = "transactions")
 public class TransactionEntity {
+
+    public TransactionEntity(UUID id, ClientEntity sender, ClientEntity recipient, BigDecimal amount, LocalDateTime timestamp) {
+        this.id = id;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private final UUID id;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    private ClientEntity sender;
+    private final ClientEntity sender;
 
     @ManyToOne
     @JoinColumn(name = "recipient_id")
-    private ClientEntity recipient;
+    private final ClientEntity recipient;
 
     @Column(name = "amount")
-    private BigDecimal amount;
+    private final BigDecimal amount;
 
     @Column(name = "date_time")
-    private LocalDateTime timestamp;
+    private final LocalDateTime timestamp;
 
     public UUID getId() {
         return id;
@@ -35,31 +44,18 @@ public class TransactionEntity {
         return sender;
     }
 
-    public void setSender(ClientEntity sender) {
-        this.sender = sender;
-    }
-
     public ClientEntity getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(ClientEntity recipient) {
-        this.recipient = recipient;
-    }
 
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

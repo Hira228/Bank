@@ -8,6 +8,21 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "client")
 public class ClientEntity {
+
+    public ClientEntity(Long id, String username,
+                        String password, String email,
+                        String telephoneNumber,
+                        BigDecimal balance,
+                        LocalDateTime dateOfBirth) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.telephoneNumber = telephoneNumber;
+        this.balance = balance;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,5 +65,33 @@ public class ClientEntity {
 
     public LocalDateTime getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

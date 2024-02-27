@@ -8,6 +8,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bank_accounts")
 public class BankAccountEntity {
+    public BankAccountEntity(Long id, ClientEntity client, BigDecimal balance, LocalDateTime creationDate) {
+        this.id = id;
+        this.client = client;
+        this.balance = balance;
+        this.creationDate = creationDate;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
