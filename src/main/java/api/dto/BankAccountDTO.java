@@ -1,6 +1,9 @@
-package entity;
+package api.dto;
 
-import jakarta.persistence.*;
+import entity.ClientEntity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,15 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "bank_accounts")
-public class BankAccountEntity {
+public class BankAccountDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
     @NonNull
     ClientEntity client;
 
@@ -29,5 +28,4 @@ public class BankAccountEntity {
 
     @NonNull
     LocalDateTime creationDate;
-
 }

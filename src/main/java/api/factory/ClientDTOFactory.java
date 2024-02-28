@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 public class ClientDTOFactory {
 
     public ClientDTO createClientDTO(ClientEntity entity) {
-        return new ClientDTO(entity.getId(), entity.getUsername(),
-                entity.getPassword(), entity.getEmail(),
-                entity.getTelephoneNumber(), entity.getBalance(), entity.getDateOfBirth());
+        return ClientDTO.builder().id(entity.getId()).username(entity.getUsername())
+                .password(entity.getPassword()).email(entity.getEmail())
+                .telephoneNumber(entity.getTelephoneNumber()).balance(entity.getBalance())
+                .dateOfBirth(entity.getDateOfBirth()).build();
     }
 
     public List<ClientDTO> createClientDTOList(List<ClientEntity> entities) {

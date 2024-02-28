@@ -1,6 +1,9 @@
 package services;
 
 import entity.TransactionEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +15,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TransactionServiceImpl implements services.Service<TransactionEntity, UUID> {
-    private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
-    private final TransactionRepository transactionRepository;
-
-    @Autowired
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
-    }
+    Logger logger;
+    TransactionRepository transactionRepository;
 
     @Override
-    public boolean createEntity(TransactionEntity entity) {
-        transactionRepository.save(entity);
+    public TransactionEntity createEntity(TransactionEntity entity) {
+        TransactionEntity transactionEntity = transactionRepository.save(entity);
         logger.info("Transaction created: {}", entity);
-        return true;
+        return transactionEntity;
     }
 
     @Override

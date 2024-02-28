@@ -1,6 +1,9 @@
 package services;
 
 import entity.BankAccountEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +14,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class BankAccountServiceImpl implements services.Service<BankAccountEntity, Long> {
     private static final Logger logger = LogManager.getLogger(BankAccountServiceImpl.class);
-    private final BankAccountRepository bankAccountRepository;
 
-    @Autowired
-    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository) {
-        this.bankAccountRepository = bankAccountRepository;
-    }
+    BankAccountRepository bankAccountRepository;
 
     @Override
-    public boolean createEntity(BankAccountEntity entity) {
-        bankAccountRepository.save(entity);
+    public BankAccountEntity createEntity(BankAccountEntity entity) {
+        BankAccountEntity bankAccountEntity = bankAccountRepository.save(entity);
         logger.info("Bank account created: {}", entity);
-        return true;
+        return bankAccountEntity;
     }
 
     @Override

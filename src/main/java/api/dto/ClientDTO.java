@@ -1,37 +1,37 @@
 package api.dto;
 
-import org.springframework.lang.NonNull;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClientDTO {
 
-    public ClientDTO(@NonNull Long id, @NonNull String username,
-                     @NonNull String password,
-                     @NonNull String email, @NonNull String telephoneNumber,
-                     @NonNull BigDecimal balance, @NonNull LocalDateTime dateOfBirth) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.telephoneNumber = telephoneNumber;
-        this.balance = balance;
-        this.dateOfBirth = dateOfBirth;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
-    private final Long id;
+    Long id;
     @NonNull
-    private final String username;
+     String username;
     @NonNull
-    private final String password;
+    String password;
     @NonNull
-    private final String email;
+    String email;
     @NonNull
-    private final String telephoneNumber;
+    String telephoneNumber;
     @NonNull
-    private final BigDecimal balance;
+    BigDecimal balance;
     @NonNull
-    private final LocalDateTime dateOfBirth;
-
+    LocalDateTime dateOfBirth;
 }
