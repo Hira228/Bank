@@ -1,4 +1,4 @@
-package api.dto;
+package org.example.api.dto;
 
 
 import lombok.AccessLevel;

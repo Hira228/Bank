@@ -1,6 +1,6 @@
-package repositories;
+package org.example.repositories;
 
-import entity.TransactionEntity;
+import org.example.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

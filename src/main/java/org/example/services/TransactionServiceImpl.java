@@ -1,14 +1,13 @@
-package services;
+package org.example.services;
 
-import entity.TransactionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.example.entity.TransactionEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repositories.TransactionRepository;
+import org.example.repositories.TransactionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +16,8 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TransactionServiceImpl implements services.Service<TransactionEntity, UUID> {
-    Logger logger;
+public class TransactionServiceImpl implements org.example.services.Service<TransactionEntity, UUID> {
+    private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
     TransactionRepository transactionRepository;
 
     @Override

@@ -1,7 +1,7 @@
-package api.factory;
+package org.example.api.factory;
 
-import api.dto.ClientDTO;
-import entity.ClientEntity;
+import org.example.api.dto.ClientDTO;
+import org.example.entity.ClientEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 public class ClientDTOFactory {
 
     public ClientDTO createClientDTO(ClientEntity entity) {
-        return ClientDTO.builder().id(entity.getId()).username(entity.getUsername())
-                .password(entity.getPassword()).email(entity.getEmail())
-                .telephoneNumber(entity.getTelephoneNumber()).balance(entity.getBalance())
+        return ClientDTO.builder().id(entity.getId()).name(entity.getName())
+                .password(entity.getPassword()).emails(entity.getEmails())
+                .telephoneNumbers(entity.getTelephoneNumbers())
                 .dateOfBirth(entity.getDateOfBirth()).build();
     }
 

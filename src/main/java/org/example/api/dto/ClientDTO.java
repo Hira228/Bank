@@ -1,14 +1,12 @@
-package api.dto;
+package org.example.api.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
+import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
@@ -23,15 +21,15 @@ public class ClientDTO {
     @NonNull
     Long id;
     @NonNull
-     String username;
+    String name;
     @NonNull
     String password;
     @NonNull
-    String email;
+    private List<String> emails;
     @NonNull
-    String telephoneNumber;
+    private List<String> telephoneNumbers;
     @NonNull
     BigDecimal balance;
     @NonNull
-    LocalDateTime dateOfBirth;
+    LocalDate dateOfBirth;
 }

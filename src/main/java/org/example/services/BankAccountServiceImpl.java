@@ -1,14 +1,13 @@
-package services;
+package org.example.services;
 
-import entity.BankAccountEntity;
+import org.example.entity.BankAccountEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repositories.BankAccountRepository;
+import org.example.repositories.BankAccountRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import java.util.Optional;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class BankAccountServiceImpl implements services.Service<BankAccountEntity, Long> {
+public class BankAccountServiceImpl implements org.example.services.Service<BankAccountEntity, Long> {
     private static final Logger logger = LogManager.getLogger(BankAccountServiceImpl.class);
 
     BankAccountRepository bankAccountRepository;

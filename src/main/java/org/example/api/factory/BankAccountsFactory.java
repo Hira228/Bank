@@ -1,9 +1,7 @@
-package api.factory;
+package org.example.api.factory;
 
-import api.dto.BankAccountDTO;
-import api.dto.ClientDTO;
-import entity.BankAccountEntity;
-import entity.ClientEntity;
+import org.example.api.dto.BankAccountDTO;
+import org.example.entity.BankAccountEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
