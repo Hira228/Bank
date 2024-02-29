@@ -15,20 +15,17 @@ import org.example.services.BankAccountServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.example.services.ClientServiceImpl;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,6 +47,7 @@ public class ClientAndBankAccountController {
     public static final String SEARCH = "/org/example/api/search";
 
     @GetMapping(FETCH_BANK_ACCOUNTS)
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<BankAccountDTO>> fetchClients() {
         List<BankAccountEntity> accounts = bankAccountService.getAllEntities();
 
@@ -57,17 +55,24 @@ public class ClientAndBankAccountController {
     }
 
     @GetMapping(SEARCH)
-    public ResponseEntity<List<ClientEntity>> searchClients(
-            @RequestParam(required = false) LocalDate dateOfBirth,
-            @RequestParam(required = false) String telephone,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email,
-            @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<List<ClientEntity>> searchClients(@RequestParam(required = false) LocalDate dateOfBirth,
+                                                            @RequestParam(required = false) String telephoneNumber,
+                                                            @RequestParam(required = false) String name,
+                                                            @RequestParam(required = false) String email) {
+        List<ClientEntity> clientEntities = new ArrayList<>();
+        if(dateOfBirth != null) {
+            clientEntities = clientService.searchClientsDate(dateOfBirth);
+        } else if(telephoneNumber != null) {
+            clientEntities = clientService.searchClientsTelephoneNumber(telephoneNumber);
+        } else if(name != null) {
+            clientEntities = clientService.searchClientsName(name);
+        } else if(email != null) {
+            clientEntities = clientService.searchClientsEmail(email);
+        }
 
-        List<ClientEntity> clients = clientService.searchClients(dateOfBirth, telephone, name, email);
-        return ResponseEntity.ok(clients);
+        return ResponseEntity.ok(clientEntities);
     }
-
     @PostMapping(CREATE_BANK_ACCOUNT)
     public ResponseEntity<BankAccountDTO> createBankAccount(@RequestBody ClientDTO clientRequest) {
         String name = clientRequest.getName();
@@ -77,7 +82,7 @@ public class ClientAndBankAccountController {
         BigDecimal balance = clientRequest.getBalance();
         LocalDate dateOfBirth = clientRequest.getDateOfBirth();
 
-        if (!isValidClientData(password, emails, telephoneNumbers)) {
+        if (!isValidClientData(password, emails, telephoneNumbers, balance)) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -94,6 +99,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_BANK_ACCOUNT)
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AckDTO> deleteBankAccount(@PathVariable Long clientId) {
         if(clientService.getEntityById(clientId).isPresent() && bankAccountService.getEntityById(clientId).isPresent()) {
             bankAccountService.deleteEntityById(clientId);
@@ -104,6 +110,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_EMAIL_ADDRESS)
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AckDTO> deleteEmail(@PathVariable Long clientId,
                                               @PathVariable String delEmailAddress) {
         Optional<ClientEntity> client = clientService.getEntityById(clientId);
@@ -118,6 +125,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_TELEPHONE_NUMBER)
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AckDTO> deleteTelephoneNumber(@PathVariable Long clientId,
                                               @PathVariable String delTelephoneNumber) {
         Optional<ClientEntity> client = clientService.getEntityById(clientId);
@@ -132,6 +140,7 @@ public class ClientAndBankAccountController {
     }
 
     @PutMapping(CHANGE_TELEPHONE_NUMBER + "/{newTelephoneNumber}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AckDTO> updateTelephoneNumber(@PathVariable Long clientId,
                                                         @PathVariable String oldTelephoneNumber,
                                                         @PathVariable String newTelephoneNumber) {
@@ -147,6 +156,7 @@ public class ClientAndBankAccountController {
     }
 
     @PutMapping(CHANGE_EMAIL_ADDRESS + "/{newEmailAddress}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AckDTO> updateEmailAddress(@PathVariable Long clientId,
                                                      @PathVariable String oldEmailAddress,
                                                      @PathVariable String newEmailAddress) {
@@ -160,32 +170,7 @@ public class ClientAndBankAccountController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AckDTO(false));
     }
-    private List<ClientDTO> filterClients(List<ClientEntity> clients, LocalDate dateOfBirth, String telephone, String name, String email) {
-        return clients.stream()
-                .filter(client -> (dateOfBirth == null || client.getDateOfBirth().isAfter(dateOfBirth)))
-                .filter(client -> (telephone == null || client.getTelephoneNumbers().contains(telephone)))
-                .filter(client -> (name == null || client.getName().startsWith(name)))
-                .filter(client -> (email == null || client.getEmails().contains(email)))
-                .map(clientDTOFactory::createClientDTO)
-                .collect(Collectors.toList());
-    }
-
-    private void sortClients(List<ClientDTO> clients, String sort) {
-        switch (sort) {
-            case "firstName":
-                clients.sort(Comparator.comparing(ClientDTO::getName));
-                break;
-            default:
-                break;
-        }
-    }
-
-    private List<ClientDTO> paginateClients(List<ClientDTO> clients, int page, int size) {
-        int start = page * size;
-        int end = Math.min(start + size, clients.size());
-        return clients.subList(start, end);
-    }
-    private boolean isValidClientData(String password, List<String> emails, List<String> telephoneNumbers) {
+    private boolean isValidClientData(String password, List<String> emails, List<String> telephoneNumbers, BigDecimal balance) {
         for (String email : emails) {
             if (clientService.findByEmails(email).isPresent()) {
                 return false;
@@ -196,7 +181,8 @@ public class ClientAndBankAccountController {
                 return false;
             }
         }
-        return true;
+
+        return balance.compareTo(BigDecimal.ZERO) >= 0;
     }
 
     private boolean isValidPassword(String password) {

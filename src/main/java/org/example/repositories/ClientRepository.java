@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 //
@@ -27,14 +28,19 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     boolean existsByTelephoneNumbersAndIdNot(String telephoneNumber, Long id);
 
     @Query("SELECT c FROM ClientEntity c " +
-            "WHERE (:dateOfBirth IS NULL OR c.dateOfBirth > :dateOfBirth) " +
-            "AND (:telephoneNumber IS NULL OR :telephoneNumber MEMBER OF c.telephoneNumbers) " +
-            "AND (:name IS NULL OR c.name LIKE :name) " +
-            "AND (:email IS NULL OR :email MEMBER OF c.emails)")
-    List<ClientEntity> findClientsByCriteria(
-            @Param("dateOfBirth") LocalDate dateOfBirth,
-            @Param("telephoneNumber") String telephoneNumber,
-            @Param("name") String name,
-            @Param("email") String email
-    );
+            "WHERE c.dateOfBirth > :dateOfBirth")
+    List<ClientEntity> findByFilterDate(@Param("dateOfBirth") LocalDate dateOfBirth);
+
+    @Query("SELECT c FROM ClientEntity c " +
+            "WHERE :telephoneNumber MEMBER OF c.telephoneNumbers")
+    List<ClientEntity> findByFilterTelephoneNumber(@Param("telephoneNumber") String telephoneNumber);
+
+
+    @Query("SELECT c FROM ClientEntity c " +
+            "WHERE :email MEMBER OF c.emails")
+    List<ClientEntity> findByFilterEmail(@Param("email") String email);
+
+    @Query("SELECT c FROM ClientEntity c " +
+            "WHERE c.name LIKE CONCAT(:name, '%')")
+    List<ClientEntity> findByFilterName(@Param("name") String name);
 }

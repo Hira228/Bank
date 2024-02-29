@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.example.repositories.ClientRepository;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +25,20 @@ public class ClientServiceImpl implements org.example.services.Service<ClientEnt
     ClientRepository clientRepository;
     PasswordEncoder passwordEncoder;
 
-    public List<ClientEntity> searchClients(LocalDate dateOfBirth, String telephoneNumber, String name, String email) {
-        String nameParam = name != null ? name + "%" : null;
-        return clientRepository.findClientsByCriteria(dateOfBirth, telephoneNumber, nameParam, email);
+    public List<ClientEntity> searchClientsDate(LocalDate dateOfBirth) {
+        return clientRepository.findByFilterDate(dateOfBirth);
+    }
+
+    public List<ClientEntity> searchClientsTelephoneNumber(String telephoneNumber) {
+        return clientRepository.findByFilterTelephoneNumber(telephoneNumber);
+    }
+
+    public List<ClientEntity> searchClientsEmail(String email) {
+        return clientRepository.findByFilterEmail(email);
+    }
+
+    public List<ClientEntity> searchClientsName(String name) {
+        return clientRepository.findByFilterName(name);
     }
     @Override
     public ClientEntity createEntity(ClientEntity entity) {
