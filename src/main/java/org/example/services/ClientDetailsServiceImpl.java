@@ -1,6 +1,7 @@
 package org.example.services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.example.config.ClientDetails;
@@ -30,8 +31,12 @@ public class ClientDetailsServiceImpl implements UserDetailsService {
     }
 
     private Optional<ClientEntity> findByEmails(String email) {
-        return Optional.ofNullable(entityManager.createQuery("SELECT c FROM ClientEntity c JOIN FETCH c.emails WHERE :email MEMBER OF c.emails", ClientEntity.class)
-                .setParameter("email", email)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(entityManager.createQuery("SELECT c FROM ClientEntity c JOIN FETCH c.emails WHERE :email MEMBER OF c.emails", ClientEntity.class)
+                    .setParameter("email", email)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

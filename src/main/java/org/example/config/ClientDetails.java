@@ -5,11 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class ClientDetails implements UserDetails {
     private final ClientEntity client;
@@ -27,8 +24,8 @@ public class ClientDetails implements UserDetails {
     }
 
     @Override
-    public String getUsername() {           // вход по первому email
-        return client.getEmails().get(0);
+    public String getUsername() {
+        return String.join(",", client.getEmails());
     }
 
     @Override
