@@ -5,32 +5,24 @@ import org.example.api.dto.AckDTO;
 import org.example.api.dto.BankAccountDTO;
 import org.example.api.dto.ClientDTO;
 import org.example.api.factory.BankAccountsFactory;
-import org.example.api.factory.ClientDTOFactory;
 import org.example.entity.BankAccountEntity;
 import org.example.entity.ClientEntity;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.services.BankAccountServiceImpl;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.example.services.ClientServiceImpl;
 
-import javax.servlet.http.PushBuilder;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
-
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ClientAndBankAccountController {
@@ -202,10 +194,6 @@ public class ClientAndBankAccountController {
             return false;
         }
 
-        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
-            return false;
-        }
-
-        return true;
+        return password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*");
     }
 }

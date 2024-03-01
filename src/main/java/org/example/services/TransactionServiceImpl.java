@@ -1,14 +1,21 @@
 package org.example.services;
 
 import org.apache.logging.log4j.LogManager;
+import org.example.api.exceptions.ClientNotFoundException;
+import org.example.api.exceptions.InsufficientFundsException;
+import org.example.entity.ClientEntity;
 import org.example.entity.TransactionEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.Logger;
+import org.example.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 import org.example.repositories.TransactionRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,6 +26,36 @@ import java.util.UUID;
 public class TransactionServiceImpl implements org.example.services.Service<TransactionEntity, UUID> {
     private static final Logger logger = LogManager.getLogger(TransactionServiceImpl.class);
     TransactionRepository transactionRepository;
+    ClientRepository clientRepository;
+    @Transactional
+    public void transferMoney(Long senderAccountId, Long receiverAccountId, BigDecimal amount) {
+        ClientEntity senderAccount = clientRepository.findById(senderAccountId)
+                .orElseThrow(() -> new ClientNotFoundException("Sender account not found"));
+        ClientEntity receiverAccount = clientRepository.findById(receiverAccountId)
+                .orElseThrow(() -> new ClientNotFoundException("Receiver account not found"));
+
+        if (senderAccount.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException("Sender account has insufficient funds");
+        }
+
+        senderAccount.setBalance(senderAccount.getBalance().subtract(amount));
+        receiverAccount.setBalance(receiverAccount.getBalance().add(amount));
+
+        clientRepository.save(senderAccount);
+        clientRepository.save(receiverAccount);
+
+        UUID uuid = UUID.randomUUID();
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        TransactionEntity transaction =
+                new TransactionEntity(uuid, senderAccount, receiverAccount, amount, dateTime);
+
+        transactionRepository.save(transaction);
+
+        logger.info("Money transfer from account {} to account {} in the amount of {} completed successfully",
+                senderAccountId, receiverAccountId, amount);
+    }
 
     @Override
     public TransactionEntity createEntity(TransactionEntity entity) {

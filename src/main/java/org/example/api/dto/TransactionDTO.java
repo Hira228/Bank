@@ -1,8 +1,8 @@
-package org.example.entity;
+package org.example.api.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.entity.ClientEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,20 +13,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "transactions")
-public class TransactionEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class TransactionDTO {
+    @NonNull
     UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
     @NonNull
     ClientEntity sender;
 
-    @ManyToOne
-    @JoinColumn(name = "recipient_id")
     @NonNull
     ClientEntity recipient;
 
@@ -35,6 +28,4 @@ public class TransactionEntity {
 
     @NonNull
     LocalDateTime timestamp;
-
-
 }

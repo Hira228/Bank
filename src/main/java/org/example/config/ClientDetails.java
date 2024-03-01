@@ -47,4 +47,8 @@ public class ClientDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId() {
+        return client.getId();
+    }
 }
