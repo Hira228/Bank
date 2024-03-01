@@ -42,6 +42,7 @@ public class ClientServiceImpl implements org.example.services.Service<ClientEnt
     }
     @Override
     public ClientEntity createEntity(ClientEntity entity) {
+        entity.setRoles("CLIENT");
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         ClientEntity client = clientRepository.save(entity);
         logger.info("Client with id {} created successfully", entity.getId());

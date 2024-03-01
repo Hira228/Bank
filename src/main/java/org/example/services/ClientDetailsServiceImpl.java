@@ -1,37 +1,37 @@
 package org.example.services;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.AllArgsConstructor;
+import org.example.config.ClientDetails;
 import org.example.entity.ClientEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ClientDetailsServiceImpl implements UserDetailsService {
 
-    private final ClientServiceImpl clientService;
-    private final PasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<ClientEntity> optionalClient = clientService.findByEmails(email);
+        Optional<ClientEntity> optionalClient = findByEmails(email);
 
-        if (optionalClient.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
+        return optionalClient.map(ClientDetails::new)
+                .orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
+    }
 
-        ClientEntity client = optionalClient.get();
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(client.getEmails().get(0))
-                .password(passwordEncoder.encode(client.getPassword()))
-                .roles("CLIENT")
-                .build();
+    private Optional<ClientEntity> findByEmails(String email) {
+        return Optional.ofNullable(entityManager.createQuery("SELECT c FROM ClientEntity c JOIN FETCH c.emails WHERE :email MEMBER OF c.emails", ClientEntity.class)
+                .setParameter("email", email)
+                .getSingleResult());
     }
 }

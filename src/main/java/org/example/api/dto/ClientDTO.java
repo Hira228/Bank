@@ -33,4 +33,6 @@ public class ClientDTO {
     BigDecimal balance;
     @NonNull
     LocalDate dateOfBirth;
+    @NonNull
+    String roles;
 }

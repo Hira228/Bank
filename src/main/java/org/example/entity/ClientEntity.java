@@ -38,6 +38,8 @@ public class ClientEntity {
     @Column(name = "date_of_birth", nullable = false)
     LocalDate dateOfBirth;
 
+    String roles;
+
     public boolean removeEmail(String email) {
         int k = -1;
         for(int i = 0; i < emails.size(); ++i) {

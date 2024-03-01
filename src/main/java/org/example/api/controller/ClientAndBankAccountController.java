@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.example.services.ClientServiceImpl;
 
+import javax.servlet.http.PushBuilder;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ClientAndBankAccountController {
     ClientServiceImpl clientService;
-    ClientDTOFactory clientDTOFactory;
     BankAccountServiceImpl bankAccountService;
     BankAccountsFactory bankAccountsFactory;
     public static final String FETCH_BANK_ACCOUNTS = "/org/example/api/client/";
@@ -47,7 +47,7 @@ public class ClientAndBankAccountController {
     public static final String SEARCH = "/org/example/api/search";
 
     @GetMapping(FETCH_BANK_ACCOUNTS)
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<List<BankAccountDTO>> fetchClients() {
         List<BankAccountEntity> accounts = bankAccountService.getAllEntities();
 
@@ -55,7 +55,7 @@ public class ClientAndBankAccountController {
     }
 
     @GetMapping(SEARCH)
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<List<ClientEntity>> searchClients(@RequestParam(required = false) LocalDate dateOfBirth,
                                                             @RequestParam(required = false) String telephoneNumber,
                                                             @RequestParam(required = false) String name,
@@ -99,7 +99,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_BANK_ACCOUNT)
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> deleteBankAccount(@PathVariable Long clientId) {
         if(clientService.getEntityById(clientId).isPresent() && bankAccountService.getEntityById(clientId).isPresent()) {
             bankAccountService.deleteEntityById(clientId);
@@ -110,7 +110,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_EMAIL_ADDRESS)
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> deleteEmail(@PathVariable Long clientId,
                                               @PathVariable String delEmailAddress) {
         Optional<ClientEntity> client = clientService.getEntityById(clientId);
@@ -125,7 +125,7 @@ public class ClientAndBankAccountController {
     }
 
     @DeleteMapping(DELETE_TELEPHONE_NUMBER)
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> deleteTelephoneNumber(@PathVariable Long clientId,
                                               @PathVariable String delTelephoneNumber) {
         Optional<ClientEntity> client = clientService.getEntityById(clientId);
@@ -140,7 +140,7 @@ public class ClientAndBankAccountController {
     }
 
     @PutMapping(CHANGE_TELEPHONE_NUMBER + "/{newTelephoneNumber}")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> updateTelephoneNumber(@PathVariable Long clientId,
                                                         @PathVariable String oldTelephoneNumber,
                                                         @PathVariable String newTelephoneNumber) {
@@ -156,7 +156,7 @@ public class ClientAndBankAccountController {
     }
 
     @PutMapping(CHANGE_EMAIL_ADDRESS + "/{newEmailAddress}")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> updateEmailAddress(@PathVariable Long clientId,
                                                      @PathVariable String oldEmailAddress,
                                                      @PathVariable String newEmailAddress) {
