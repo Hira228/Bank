@@ -2,6 +2,7 @@ package org.example.api.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.entity.BankAccountEntity;
 import org.example.entity.ClientEntity;
 
 import java.math.BigDecimal;
@@ -18,10 +19,10 @@ public class TransactionDTO {
     UUID id;
 
     @NonNull
-    ClientEntity sender;
+    BankAccountEntity sender;
 
     @NonNull
-    ClientEntity recipient;
+    BankAccountEntity recipient;
 
     @NonNull
     BigDecimal amount;

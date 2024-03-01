@@ -23,12 +23,12 @@ public class TransactionEntity {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     @NonNull
-    ClientEntity sender;
+    BankAccountEntity sender;
 
     @ManyToOne
     @JoinColumn(name = "recipient_id")
     @NonNull
-    ClientEntity recipient;
+    BankAccountEntity recipient;
 
     @NonNull
     BigDecimal amount;
