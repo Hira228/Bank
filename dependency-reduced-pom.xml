@@ -28,7 +28,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.example.App</mainClass>
+              <mainClass>org.effectivemobile.App</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -45,7 +45,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>org.example.App</mainClass>
+                  <mainClass>org.effectivemobile.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>
