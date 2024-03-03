@@ -29,19 +29,12 @@ public class TransactionController {
     @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<AckDTO> createTransaction(@PathVariable("id_recipient") Long idRecipient,
                                                     @PathVariable("amount") BigDecimal amount) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long senderId = getUserIdFromAuthentication(authentication);
         try {
-            transactionService.transferMoney(senderId, idRecipient, amount);
+            transactionService.transferMoney(idRecipient, amount);
             return ResponseEntity.ok(new AckDTO(true));
         } catch (ClientNotFoundException | InsufficientFundsException e) {
             e.getStackTrace();
             return ResponseEntity.ok(new AckDTO(false));
         }
-    }
-
-    private Long getUserIdFromAuthentication(Authentication authentication) {
-        ClientDetails clientDetails = (ClientDetails) authentication.getPrincipal();
-        return clientDetails.getId();
     }
 }

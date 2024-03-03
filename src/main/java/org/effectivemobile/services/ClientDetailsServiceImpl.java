@@ -23,17 +23,17 @@ public class ClientDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<ClientEntity> optionalClient = findByEmails(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<ClientEntity> optionalClient = findByNames(username);
 
         return optionalClient.map(ClientDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
-    private Optional<ClientEntity> findByEmails(String email) {
+    private Optional<ClientEntity> findByNames(String name) {
         try {
-            return Optional.ofNullable(entityManager.createQuery("SELECT c FROM ClientEntity c JOIN FETCH c.emails WHERE :email MEMBER OF c.emails", ClientEntity.class)
-                    .setParameter("email", email)
+            return Optional.ofNullable(entityManager.createQuery("SELECT c FROM ClientEntity c WHERE :username = c.username", ClientEntity.class)
+                    .setParameter("username", name)
                     .getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();

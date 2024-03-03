@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ClientDTOFactory {
 
     public ClientDTO createClientDTO(ClientEntity entity) {
-        return ClientDTO.builder().id(entity.getId()).name(entity.getName())
+        return ClientDTO.builder().id(entity.getId()).username(entity.getUsername())
                 .password(entity.getPassword()).emails(entity.getEmails())
                 .telephoneNumbers(entity.getTelephoneNumbers())
                 .dateOfBirth(entity.getDateOfBirth()).build();

@@ -9,14 +9,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     boolean existsByEmailsAndIdNot(String email, Long id);
     boolean existsByTelephoneNumbersAndIdNot(String telephoneNumber, Long id);
 
-    @Query("SELECT c FROM ClientEntity c " +
-            "WHERE c.dateOfBirth > :dateOfBirth")
+        @Query("SELECT c FROM ClientEntity c " +
+                "WHERE c.dateOfBirth > :dateOfBirth")
     List<ClientEntity> findByFilterDate(@Param("dateOfBirth") LocalDate dateOfBirth);
 
     @Query("SELECT c FROM ClientEntity c " +
@@ -29,6 +30,6 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     List<ClientEntity> findByFilterEmail(@Param("email") String email);
 
     @Query("SELECT c FROM ClientEntity c " +
-            "WHERE c.name LIKE CONCAT(:name, '%')")
-    List<ClientEntity> findByFilterName(@Param("name") String name);
+            "WHERE c.username LIKE CONCAT(:username, '%')")
+    List<ClientEntity> findByFilterUserName(@Param("username") String name);
 }

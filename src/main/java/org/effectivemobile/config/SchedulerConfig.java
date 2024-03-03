@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @EnableScheduling
 public class SchedulerConfig {
     private final BankAccountRepository bankAccountRepository;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     public SchedulerConfig(BankAccountRepository bankAccountRepository) {
         this.bankAccountRepository = bankAccountRepository;
     }

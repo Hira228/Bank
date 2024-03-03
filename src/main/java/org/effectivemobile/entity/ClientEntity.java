@@ -21,7 +21,7 @@ public class ClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @NonNull
-    String name;
+    String username;
     @NonNull
     String password;
     @NonNull
@@ -41,56 +41,12 @@ public class ClientEntity {
     @Schema(hidden=true)
     String roles;
 
-    public boolean removeEmail(String email) {
-        int k = -1;
-        for(int i = 0; i < emails.size(); ++i) {
-            if(emails.get(i).equals(email)) {
-                k = i;
-                break;
-            }
-        }
-        if(k == -1) return false;
-        emails.remove(k);
-        return true;
-    }
-
-    public boolean removeTelephoneNumber(String telephoneNumber) {
-        int k = -1;
-        for(int i = 0; i < telephoneNumbers.size(); ++i) {
-            if(telephoneNumbers.get(i).equals(telephoneNumber)) {
-                k = i;
-                break;
-            }
-        }
-        if(k == -1) return false;
-        telephoneNumbers.remove(k);
-        return true;
-    }
-
-    public boolean checkTelephoneNumbers(String telephoneNumber) {
-        for(String t : telephoneNumbers) {
-            if(t.equals(telephoneNumber)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkEmail(String email) {
-        for(String t : emails) {
-            if(t.equals(email)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static ClientEntity makeDefault(String name, String password, BigDecimal initialBalance,
+    public static ClientEntity makeDefault(String username, String password, BigDecimal initialBalance,
                                            List<String> emails, List<String> telephoneNumbers,
                                            LocalDate dateOfBirth) {
 
 
-        return builder().name(name)
+        return builder().username(username)
                 .password(password)
                 .initialBalance(initialBalance)
                 .emails(emails)

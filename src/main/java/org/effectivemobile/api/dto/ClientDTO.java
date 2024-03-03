@@ -23,7 +23,7 @@ public class ClientDTO {
     @Schema(hidden = true)
     Long id;
     @NotNull
-    String name;
+    String username;
     @NotNull
     String password;
     @NotNull

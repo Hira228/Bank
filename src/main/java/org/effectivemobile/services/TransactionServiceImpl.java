@@ -3,6 +3,7 @@ package org.effectivemobile.services;
 import org.apache.logging.log4j.LogManager;
 import org.effectivemobile.api.exceptions.ClientNotFoundException;
 import org.effectivemobile.api.exceptions.InsufficientFundsException;
+import org.effectivemobile.config.ClientDetails;
 import org.effectivemobile.entity.BankAccountEntity;
 import org.effectivemobile.entity.TransactionEntity;
 import org.effectivemobile.repositories.BankAccountRepository;
@@ -11,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +31,14 @@ public class TransactionServiceImpl implements org.effectivemobile.services.Serv
     TransactionRepository transactionRepository;
     BankAccountRepository bankAccountRepository;
     @Transactional
-    public void transferMoney(Long senderAccountId, Long receiverAccountId, BigDecimal amount) {
-        BankAccountEntity senderAccount = bankAccountRepository.findById(senderAccountId)
+    public void transferMoney(Long receiverAccountId, BigDecimal amount) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        ClientDetails clientDetails = (ClientDetails) authentication.getPrincipal();
+
+        BankAccountEntity senderAccount = bankAccountRepository.findById(clientDetails.getId())
                 .orElseThrow(() -> new ClientNotFoundException("Sender account not found"));
+
         BankAccountEntity receiverAccount = bankAccountRepository.findById(receiverAccountId)
                 .orElseThrow(() -> new ClientNotFoundException("Receiver account not found"));
 
@@ -52,7 +60,7 @@ public class TransactionServiceImpl implements org.effectivemobile.services.Serv
         transactionRepository.save(transaction);
 
         logger.info("Money transfer from account {} to account {} in the amount of {} completed successfully",
-                senderAccountId, receiverAccountId, amount);
+                clientDetails.getId(), receiverAccountId, amount);
     }
 
     @Override
